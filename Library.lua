@@ -8,14 +8,30 @@ local TweenService = game:GetService('TweenService');
 local RenderStepped = RunService.RenderStepped;
 local LocalPlayer = Players.LocalPlayer;
 local Mouse = LocalPlayer:GetMouse();
+local PlayerGui = player.PlayerGui;
 
 local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
 
-local ScreenGui = Instance.new('ScreenGui');
-ProtectGui(ScreenGui);
+local function createScreenGui()
+    task.wait(math.random(1, 3) / 10)
+    local screenGui = Instance.new("ScreenGui")
+    protectgui(screenGui)
 
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
-ScreenGui.Parent = CoreGui;
+    local length = math.random(1, 32)
+    local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    local randomName = ""
+    for i = 1, length do
+        randomName = randomName .. chars:sub(math.random(1, #chars), math.random(1, #chars))
+    end
+    screenGui.Name = randomName
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    screenGui.DisplayOrder = 5
+    screenGui.ResetOnSpawn = false
+    screenGui.Parent = PlayerGui
+    return screenGui
+end
+
+local screenGui = createScreenGui()
 
 local Toggles = {};
 local Options = {};
