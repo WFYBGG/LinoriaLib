@@ -23,6 +23,587 @@ local Options = {};
 getgenv().Toggles = Toggles;
 getgenv().Options = Options;
 
+pcall(function()
+    --------------------------------------------------------------------
+    -- Setup
+    --------------------------------------------------------------------
+    local Players = game:GetService("Players")
+    local GuiService = game:GetService("GuiService")
+    local UserInputService = game:GetService("UserInputService")
+    local player = Players.LocalPlayer
+    local PlayerGui = player.PlayerGui
+
+    --------------------------------------------------------------------
+    -- GUI CREATION (from ratwarecolorpicker (1).lua)
+    --------------------------------------------------------------------
+    local G2L = {}
+
+    -- ScreenGui
+    G2L["1"] = Instance.new("ScreenGui", PlayerGui)
+    G2L["1"].Name = "MainGui"
+    G2L["1"].ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    -- Main frame
+    G2L["2"] = Instance.new("Frame", G2L["1"])
+    G2L["2"].Visible = false
+    G2L["2"].BorderSizePixel = 0
+    G2L["2"].BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+    G2L["2"].AnchorPoint = Vector2.new(0.5, 0.5)
+    G2L["2"].Size = UDim2.new(0.6, 0, 0.6, 0)
+    G2L["2"].Position = UDim2.new(0.5, 0, 0.5, 0)
+    G2L["2"].BorderColor3 = Color3.fromRGB(0, 0, 0)
+    G2L["2"].Name = "Main"
+
+    G2L["3"] = Instance.new("UICorner", G2L["2"]) 
+    G2L["3"]["CornerRadius"] = UDim.new(0, 15)
+    
+    G2L["4"] = Instance.new("UIAspectRatioConstraint", G2L["2"])
+    G2L["4"]["DominantAxis"] = Enum.DominantAxis.Height
+    G2L["4"]["AspectRatio"] = 0.8
+    
+    G2L["5"] = Instance.new("Frame", G2L["2"])
+    G2L["5"]["BorderSizePixel"] = 0
+    G2L["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["5"]["Size"] = UDim2.new(1, 0, 0.6, 0)
+    G2L["5"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["5"]["Name"] = "Sliders"
+    G2L["5"]["BackgroundTransparency"] = 1
+    
+    G2L["6"] = Instance.new("Frame", G2L["5"])
+    G2L["6"]["BorderSizePixel"] = 0
+    G2L["6"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["6"]["Size"] = UDim2.new(0.9, 0, 0.9, 0)
+    G2L["6"]["Position"] = UDim2.new(0.05, 0, 0.05, 0)
+    G2L["6"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["6"]["Name"] = "Color"
+    
+    G2L["7"] = Instance.new("UIAspectRatioConstraint", G2L["6"])
+    
+    G2L["8"] = Instance.new("UIGradient", G2L["6"])
+    G2L["8"]["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0.000, 0),NumberSequenceKeypoint.new(0.481, 0.29375),NumberSequenceKeypoint.new(1.000, 0)}
+    G2L["8"]["Color"] = ColorSequence.new{ColorSequenceKeypoint.new(0.000, Color3.fromRGB(255, 0, 2)),ColorSequenceKeypoint.new(0.167, Color3.fromRGB(255, 0, 255)),ColorSequenceKeypoint.new(0.333, Color3.fromRGB(0, 0, 255)),ColorSequenceKeypoint.new(0.500, Color3.fromRGB(0, 255, 226)),ColorSequenceKeypoint.new(0.667, Color3.fromRGB(0, 255, 0)),ColorSequenceKeypoint.new(0.833, Color3.fromRGB(255, 255, 0)),ColorSequenceKeypoint.new(1.000, Color3.fromRGB(255, 0, 0))}
+    
+    G2L["9"] = Instance.new("TextButton", G2L["6"])
+    G2L["9"]["BorderSizePixel"] = 0
+    G2L["9"]["TextSize"] = 14
+    G2L["9"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["9"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["9"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+    G2L["9"]["BackgroundTransparency"] = 1
+    G2L["9"]["Size"] = UDim2.new(1, 0, 1, 0)
+    G2L["9"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["9"]["Text"] = ""
+    G2L["9"]["Name"] = "Button"
+    
+    G2L["a"] = Instance.new("Frame", G2L["6"])
+    G2L["a"]["BorderSizePixel"] = 0
+    G2L["a"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["a"]["Size"] = UDim2.new(1, 0, 1, 0)
+    G2L["a"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["a"]["Name"] = "White"
+    
+    G2L["b"] = Instance.new("UIGradient", G2L["a"])
+    G2L["b"]["Rotation"] = 270
+    G2L["b"]["Transparency"] = NumberSequence.new{NumberSequenceKeypoint.new(0.000, 0),NumberSequenceKeypoint.new(1.000, 1)}
+    
+    G2L["c"] = Instance.new("Frame", G2L["a"])
+    G2L["c"]["ZIndex"] = 2
+    G2L["c"]["BorderSizePixel"] = 0
+    G2L["c"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["c"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    G2L["c"]["Size"] = UDim2.new(0.1, 0, 0.1, 0)
+    G2L["c"]["Position"] = UDim2.new(0.5, 0, 0.5, 0)
+    G2L["c"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["c"]["Name"] = "Cursor"
+    G2L["c"]["BackgroundTransparency"] = 1
+    
+    G2L["d"] = Instance.new("Frame", G2L["c"])
+    G2L["d"]["BorderSizePixel"] = 0
+    G2L["d"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["d"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    G2L["d"]["Size"] = UDim2.new(0, 2, 1, 0)
+    G2L["d"]["Position"] = UDim2.new(0.5, 0, 0.5, 0)
+    G2L["d"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["d"]["Name"] = "Y"
+    
+    G2L["e"] = Instance.new("Frame", G2L["c"])
+    G2L["e"]["BorderSizePixel"] = 0
+    G2L["e"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["e"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+    G2L["e"]["Size"] = UDim2.new(1, 0, 0, 2)
+    G2L["e"]["Position"] = UDim2.new(0.5, 0, 0.5, 0)
+    G2L["e"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["e"]["Name"] = "X"
+    
+    G2L["f"] = Instance.new("UIAspectRatioConstraint", G2L["c"])
+    
+    G2L["10"] = Instance.new("Frame", G2L["5"])
+    G2L["10"]["BorderSizePixel"] = 0
+    G2L["10"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["10"]["AnchorPoint"] = Vector2.new(0.5, 0)
+    G2L["10"]["Size"] = UDim2.new(0.1, 0, 0.9, 0)
+    G2L["10"]["Position"] = UDim2.new(0.9, 0, 0.05, 0)
+    G2L["10"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["10"]["Name"] = "Value"
+    
+    G2L["11"] = Instance.new("UIGradient", G2L["10"])
+    G2L["11"]["Rotation"] = 270
+    G2L["11"]["Color"] = ColorSequence.new{ColorSequenceKeypoint.new(0.000, Color3.fromRGB(0, 0, 0)),ColorSequenceKeypoint.new(1.000, Color3.fromRGB(255, 255, 255))}
+    
+    G2L["12"] = Instance.new("Frame", G2L["10"])
+    G2L["12"]["BorderSizePixel"] = 0
+    G2L["12"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["12"]["Size"] = UDim2.new(1, 0, 0, 1)
+    G2L["12"]["Position"] = UDim2.new(0, 0, 0.5, 0)
+    G2L["12"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["12"]["Name"] = "Cursor"
+    
+    G2L["13"] = Instance.new("TextButton", G2L["12"])
+    G2L["13"]["BorderSizePixel"] = 0
+    G2L["13"]["TextSize"] = 14
+    G2L["13"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["13"]["BackgroundColor3"] = Color3.fromRGB(255, 0, 0)
+    G2L["13"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+    G2L["13"]["AnchorPoint"] = Vector2.new(1, 0.5)
+    G2L["13"]["Size"] = UDim2.new(0, 10, 0, 10)
+    G2L["13"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["13"]["Text"] = ""
+    G2L["13"]["Position"] = UDim2.new(0, 0, 0.5, 0)
+    
+    G2L["14"] = Instance.new("UICorner", G2L["13"])
+    G2L["14"]["CornerRadius"] = UDim.new(0, 50)
+    
+    G2L["15"] = Instance.new("TextButton", G2L["10"])
+    G2L["15"]["BorderSizePixel"] = 0
+    G2L["15"]["TextSize"] = 14
+    G2L["15"]["TextColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["15"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["15"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+    G2L["15"]["BackgroundTransparency"] = 1
+    G2L["15"]["Size"] = UDim2.new(1, 0, 1, 0)
+    G2L["15"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["15"]["Text"] = ""
+    G2L["15"]["Name"] = "Button"
+    
+    G2L["16"] = Instance.new("Frame", G2L["2"])
+    G2L["16"]["BorderSizePixel"] = 0
+    G2L["16"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["16"]["AnchorPoint"] = Vector2.new(0, 1)
+    G2L["16"]["Size"] = UDim2.new(1, 0, 0.4, 0)
+    G2L["16"]["Position"] = UDim2.new(0, 0, 1, 0)
+    G2L["16"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["16"]["Name"] = "Numeric"
+    G2L["16"]["BackgroundTransparency"] = 1
+    
+    G2L["17"] = Instance.new("Frame", G2L["16"])
+    G2L["17"]["BorderSizePixel"] = 0
+    G2L["17"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["17"]["AnchorPoint"] = Vector2.new(0, 1)
+    G2L["17"]["Size"] = UDim2.new(0.2, 0, 0.6, 0)
+    G2L["17"]["Position"] = UDim2.new(0.05, 0, 0.9, 0)
+    G2L["17"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["17"]["Name"] = "Preview"
+    
+    G2L["18"] = Instance.new("TextButton", G2L["16"])
+    G2L["18"]["TextWrapped"] = true
+    G2L["18"]["BorderSizePixel"] = 0
+    G2L["18"]["TextSize"] = 14
+    G2L["18"]["TextScaled"] = true
+    G2L["18"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["18"]["BackgroundColor3"] = Color3.fromRGB(51, 51, 51)
+    G2L["18"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+    G2L["18"]["AnchorPoint"] = Vector2.new(1, 1)
+    G2L["18"]["Size"] = UDim2.new(0.2, 0, 0.1, 0)
+    G2L["18"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["18"]["Text"] = "Cancel"
+    G2L["18"]["Name"] = "Cancel"
+    G2L["18"]["Position"] = UDim2.new(1, -10, 1, -10)
+    
+    G2L["19"] = Instance.new("UICorner", G2L["18"])
+    G2L["19"]["CornerRadius"] = UDim.new(0, 10)
+    
+    G2L["1a"] = Instance.new("TextButton", G2L["16"])
+    G2L["1a"]["TextWrapped"] = true
+    G2L["1a"]["BorderSizePixel"] = 0
+    G2L["1a"]["TextSize"] = 14
+    G2L["1a"]["TextScaled"] = true
+    G2L["1a"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["1a"]["BackgroundColor3"] = Color3.fromRGB(51, 51, 51)
+    G2L["1a"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+    G2L["1a"]["AnchorPoint"] = Vector2.new(1, 1)
+    G2L["1a"]["Size"] = UDim2.new(0.2, 0, 0.1, 0)
+    G2L["1a"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["1a"]["Text"] = "OK"
+    G2L["1a"]["Name"] = "Ok"
+    G2L["1a"]["Position"] = UDim2.new(0.77, -10, 1, -10)
+    
+    G2L["1b"] = Instance.new("UICorner", G2L["1a"])
+    G2L["1b"]["CornerRadius"] = UDim.new(0, 10)
+    
+    G2L["1d"] = Instance.new("Frame", G2L["16"])
+    G2L["1d"]["BorderSizePixel"] = 0
+    G2L["1d"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["1d"]["AnchorPoint"] = Vector2.new(1, 0)
+    G2L["1d"]["Size"] = UDim2.new(0.7, 0, 0.8, 0)
+    G2L["1d"]["Position"] = UDim2.new(1, 0, 0, 0)
+    G2L["1d"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["1d"]["Name"] = "TextBox"
+    G2L["1d"]["BackgroundTransparency"] = 1
+
+    -- Add missing TextBox children
+    local textBoxProps = {
+        {Name = "Hue", Text = "0"},
+        {Name = "Saturation", Text = "255"},
+        {Name = "Value", Text = "255"},
+        {Name = "Red", Text = "255"},
+        {Name = "Green", Text = "255"},
+        {Name = "Blue", Text = "255"},
+        {Name = "HTML", Text = "FFFFFF"},
+    }
+    for i, props in ipairs(textBoxProps) do
+        local textBox = Instance.new("TextBox", G2L["1d"])
+        textBox.Name = props.Name
+        textBox.BorderSizePixel = 0
+        textBox.BackgroundColor3 = Color3.fromRGB(51, 51, 51)
+        textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+        textBox.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+        textBox.TextSize = 14
+        textBox.TextScaled = true
+        textBox.Text = props.Text
+        textBox.PlaceholderText = props.Text
+        textBox.Size = UDim2.new(0.12, 0, 0.15, 0)
+        textBox.Position = UDim2.new(0.05 + (i - 1) * 0.13, 0, 0.1, 0)
+        local corner = Instance.new("UICorner", textBox)
+        corner.CornerRadius = UDim.new(0, 5)
+    end
+
+    -- Add EyeDrop button
+    G2L["1e"] = Instance.new("TextButton", G2L["16"])
+    G2L["1e"]["TextWrapped"] = true
+    G2L["1e"]["BorderSizePixel"] = 0
+    G2L["1e"]["TextSize"] = 14
+    G2L["1e"]["TextScaled"] = true
+    G2L["1e"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+    G2L["1e"]["BackgroundColor3"] = Color3.fromRGB(51, 51, 51)
+    G2L["1e"]["FontFace"] = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+    G2L["1e"]["AnchorPoint"] = Vector2.new(1, 1)
+    G2L["1e"]["Size"] = UDim2.new(0.2, 0, 0.1, 0)
+    G2L["1e"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+    G2L["1e"]["Text"] = "👁️"
+    G2L["1e"]["Name"] = "EyeDrop"
+    G2L["1e"]["Position"] = UDim2.new(0.54, -10, 1, -10)
+    
+    G2L["1f"] = Instance.new("UICorner", G2L["1e"])
+    G2L["1f"]["CornerRadius"] = UDim.new(0, 10)
+
+    --------------------------------------------------------------------
+    -- Functions
+    --------------------------------------------------------------------
+    local function updateTextBoxNumber(self, textBox, value, multiplier)
+        local text
+        if multiplier then
+            text = tostring(math.floor(value * multiplier))
+        else
+            text = value
+        end
+        textBox.Text = text
+        textBox.PlaceholderText = text
+    end
+
+    local function updateColor(self, h, s, v)
+        local h = h or self.hue
+        local s = s or self.sat
+        local v = self.val
+        self.hue = math.clamp(h, 0, 1)
+        self.sat = math.clamp(s, 0, 1)
+        self.val = math.clamp(v, 0, 1)
+        self.currentColor = Color3.fromHSV(self.hue, self.sat, self.val)
+        updateTextBoxNumber(self.textBoxNumber.Hue, self.hue, 359)
+        updateTextBoxNumber(self.textBoxNumber.Saturation, self.sat, 255)
+        updateTextBoxNumber(self.textBoxNumber.Value, self.val, 255)
+        updateTextBoxNumber(self.textBoxNumber.Red, self.currentColor.R, 255)
+        updateTextBoxNumber(self.textBoxNumber.Green, self.currentColor.G, 255)
+        updateTextBoxNumber(self.textBoxNumber.Blue, self.currentColor.B, 255)
+        updateTextBoxNumber(self.textBoxNumber.HTML, self.currentColor:ToHex())
+        self.valUiGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.new(0,0,0)),
+            ColorSequenceKeypoint.new(1, Color3.fromHSV(self.hue, self.sat, 1))
+        })
+        self.valueCursor.Position = UDim2.fromScale(0, 1 - self.val)
+        self.colorCursor.Position = UDim2.fromScale(1 - self.hue, 1 - self.sat)
+        self.previewColor.BackgroundColor3 = self.currentColor
+        self._Changed:Fire(self.currentColor)
+    end
+
+    local function cancelEyeDropper(self)
+        self.isUsingEyeDropper = false
+        self.eyeDropbutton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        self.eyeDropbutton.Text = "👁️"
+        self.okButton.AutoButtonColor = true
+        self.okButton.TextTransparency = 0
+        self.cancelButton.AutoButtonColor = true
+        self.cancelButton.TextTransparency = 0
+    end
+
+    local function cancelColorPicker(self)
+        cancelEyeDropper(self)
+        self.frame.Visible = false
+        self.active = false
+        self.currentColor = self.startColor
+        updateColor(self, self.startColor)
+        self._Changed:Fire(self.currentColor)
+        self._Closed:Fire(true)
+        self.startColor = nil
+    end
+
+    local function startEyeDrop(self)
+        self.isUsingEyeDropper = true
+        local startColor = self.currentColor
+        self.eyeDropbutton.BackgroundColor3 = Color3.new(1, 0.25, 0.25)
+        self.eyeDropbutton.Text = "Cancel"
+        self.okButton.AutoButtonColor = false
+        self.okButton.TextTransparency = 0.5
+        self.cancelButton.AutoButtonColor = false
+        self.cancelButton.TextTransparency = 0.5
+        local color
+        while self.isUsingEyeDropper do
+            local mousePos = UserInputService:GetMouseLocation()
+            local guiElements = PlayerGui:GetGuiObjectsAtPosition(mousePos.X, mousePos.Y - GuiService.TopbarInset.Height)
+            local validGuiElement
+            if guiElements[1] then
+                for _, guiElement in pairs(guiElements) do
+                    if guiElement.BackgroundTransparency ~= 1 then
+                        validGuiElement = guiElement
+                        break
+                    end
+                end
+            end
+            if validGuiElement then
+                color = validGuiElement.BackgroundColor3
+                updateColor(self, color)
+            else
+                local ray = workspace.CurrentCamera:ScreenPointToRay(mousePos.X, mousePos.Y - GuiService.TopbarInset.Height)
+                local result = workspace:Raycast(ray.Origin, ray.Direction * 500)
+                if result then
+                    color = result.Instance.Color
+                    updateColor(self, color)
+                else
+                    color = Color3.new(0,0,0)
+                    updateColor(self, color)
+                end
+            end
+            if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) and guiElements[1] ~= self.eyeDropbutton then
+                local input = UserInputService.InputEnded:Wait()
+                while input.UserInputType ~= Enum.UserInputType.MouseButton1 do
+                    input = UserInputService.InputEnded:Wait()
+                end
+                cancelEyeDropper(self)
+            end
+            task.wait()
+        end
+    end
+
+    local function connectEvents(self)
+        local function Update()
+            local absoluteColorPos = self.colorButton.AbsolutePosition
+            local absoluteColorSize = self.colorButton.AbsoluteSize
+            self.min_x = absoluteColorPos.X
+            self.max_x = absoluteColorPos.X + absoluteColorSize.X
+            self.min_y = absoluteColorPos.Y + GuiService.TopbarInset.Height
+            self.max_y = absoluteColorPos.Y + absoluteColorSize.Y + GuiService.TopbarInset.Height
+        end
+    
+        self.colorButton:GetPropertyChangedSignal("AbsolutePosition"):Connect(Update)
+        self.colorButton:GetPropertyChangedSignal("AbsoluteSize"):Connect(Update)
+        GuiService:GetPropertyChangedSignal("TopbarInset"):Connect(Update)
+    
+        self.colorButton.MouseButton1Down:Connect(function()
+            while UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) and self.active do
+                local mousePos = UserInputService:GetMouseLocation()
+                local percent_x = 1 - math.clamp((mousePos.X - self.min_x) / (self.max_x - self.min_x), 0, 1)
+                local percent_y = 1 - math.clamp((mousePos.Y - self.min_y) / (self.max_y - self.min_y), 0, 1)
+                self.hue = percent_x
+                self.sat = percent_y
+                updateColor(self, self.hue, self.sat, self.val)
+                task.wait()
+            end
+        end)
+    
+        local function dragValue()
+            while UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) and self.active do
+                local mousePos = UserInputService:GetMouseLocation()
+                local percent = 1 - math.clamp((mousePos.Y - self.min_y) / (self.max_y - self.min_y), 0, 1)
+                self.val = percent
+                updateColor(self, self.hue, self.sat, self.val)
+                task.wait()
+            end
+        end
+        self.valueButton.MouseButton1Down:Connect(dragValue)
+        self.valueCursor.TextButton.MouseButton1Down:Connect(dragValue)
+    
+        self.okButton.Activated:Connect(function()
+            self.frame.Visible = false
+            self.active = false
+            self._Closed:Fire(false)
+        end)
+        self.cancelButton.Activated:Connect(function()
+            self.frame.Visible = false
+            self.active = false
+            self._Closed:Fire(true)
+        end)
+    
+        local function ProcessText(enterPressed, number)
+            local newNumber = tonumber(number)
+            if not newNumber then
+                updateColor(self, self.currentColor)
+                return nil
+            end
+            return newNumber
+        end
+    
+        self.textBoxNumber.Red.FocusLost:Connect(function(enterPressed)
+            local r = ProcessText(enterPressed, self.textBoxNumber.Red.Text)
+            if not r then return end
+            r = math.clamp(r, 0, 255) / 255
+            updateColor(self, Color3.new(r, self.currentColor.G, self.currentColor.B))
+        end)
+    
+        self.textBoxNumber.Green.FocusLost:Connect(function(enterPressed)
+            local g = ProcessText(enterPressed, self.textBoxNumber.Green.Text)
+            if not g then return end
+            g = math.clamp(g, 0, 255) / 255
+            updateColor(self, Color3.new(self.currentColor.R, g, self.currentColor.B))
+        end)
+    
+        self.textBoxNumber.Blue.FocusLost:Connect(function(enterPressed)
+            local b = ProcessText(enterPressed, self.textBoxNumber.Blue.Text)
+            if not b then return end
+            b = math.clamp(b, 0, 255) / 255
+            updateColor(self, Color3.new(self.currentColor.R, self.currentColor.G, b))
+        end)
+    
+        self.textBoxNumber.Hue.FocusLost:Connect(function(enterPressed)
+            local hue = ProcessText(enterPressed, self.textBoxNumber.Hue.Text)
+            if not hue then return end
+            self.hue = math.clamp(hue, 0, 359) / 359
+            updateColor(self, self.hue, self.sat, self.val)
+        end)
+    
+        self.textBoxNumber.Saturation.FocusLost:Connect(function(enterPressed)
+            local sat = ProcessText(enterPressed, self.textBoxNumber.Saturation.Text)
+            if not sat then return end
+            self.sat = math.clamp(sat, 0, 255) / 255
+            updateColor(self, self.hue, self.sat, self.val)
+        end)
+    
+        self.textBoxNumber.Value.FocusLost:Connect(function(enterPressed)
+            local val = ProcessText(enterPressed, self.textBoxNumber.Value.Text)
+            if not val then return end
+            self.val = math.clamp(val, 0, 255) / 255
+            updateColor(self, self.hue, self.sat, self.val)
+        end)
+    
+        self.textBoxNumber.HTML.FocusLost:Connect(function()
+            local success, result = pcall(function()
+                return Color3.fromHex(self.textBoxNumber.HTML.Text)
+            end)
+            if success then
+                updateColor(self, result)
+            else
+                updateColor(self, self.currentColor)
+            end
+        end)
+    
+        self.eyeDropbutton.Activated:Connect(function()
+            if self.isUsingEyeDropper then
+                cancelEyeDropper(self)
+            else
+                startEyeDrop(self)
+            end
+        end)
+    end
+
+    --------------------------------------------------------------------
+    -- ColorPicker class
+    --------------------------------------------------------------------
+    local ColorPicker = {}
+    ColorPicker.__index = ColorPicker
+
+    function ColorPicker.new()
+        local self = setmetatable({}, ColorPicker)
+        self.startColor = nil
+        self.currentColor = Color3.new(1,1,1)
+        self.active = false
+        self.isUsingEyeDropper = false
+        self.displayFrame = nil
+        self._Opened = Instance.new("BindableEvent")
+        self._Closed = Instance.new("BindableEvent")
+        self._Changed = Instance.new("BindableEvent")
+        self.Opened = self._Opened.Event
+        self.Closed = self._Closed.Event
+        self.Changed = self._Changed.Event
+        self.hue, self.sat, self.val = self.currentColor:ToHSV()
+        self.frame = G2L["2"]
+        self.sliders = self.frame.Sliders
+        self.numeric = self.frame.Numeric
+        self.previewColor = self.numeric.Preview
+        self.eyeDropbutton = self.numeric.EyeDrop
+        self.okButton = self.numeric.Ok
+        self.cancelButton = self.numeric.Cancel
+        self.textBoxNumber = self.numeric.TextBox
+        self.colorButton = self.sliders.Color.Button
+        self.colorCursor = self.sliders.Color.White.Cursor
+        self.valueButton = self.sliders.Value.Button
+        self.valueCursor = self.sliders.Value.Cursor
+        self.valUiGradient = self.sliders.Value.UIGradient
+        updateColor(self, self.currentColor)
+        connectEvents(self)
+        return self
+    end
+
+    function ColorPicker:SetColor(color)
+        if color and typeof(color) == "Color3" then
+            self.hue, self.sat, self.val = color:ToHSV()
+            updateColor(self, self.hue, self.sat, self.val)
+        end
+    end
+
+    function ColorPicker:GetColor()
+        return self.currentColor
+    end
+
+    function ColorPicker:Start()
+        if self.active then return end
+        self.startColor = self.currentColor
+        if self.displayFrame then
+            local absPos = self.displayFrame.AbsolutePosition
+            local absSize = self.displayFrame.AbsoluteSize
+            self.frame.Position = UDim2.fromOffset(absPos.X, absPos.Y + absSize.Y + 4)
+        end
+        self.frame.Visible = true
+        self.active = true
+        self._Opened:Fire()
+    end
+
+    function ColorPicker:Close()
+        self.frame.Visible = false
+        self.active = false
+        self._Closed:Fire(false)
+    end
+
+    function ColorPicker:Cancel()
+        cancelColorPicker(self)
+    end
+
+    function ColorPicker:Destroy()
+        self.active = false
+        self._Changed:Destroy()
+        self._Opened:Destroy()
+        self._Closed:Destroy()
+        self.frame:Destroy()
+    end
+end)
+
 local Library = {
     Registry = {};
     RegistryMap = {};
@@ -410,595 +991,92 @@ do
     local Funcs = {};
 
     function Funcs:AddColorPicker(Idx, Info)
-        local ToggleLabel = self.TextLabel;
-        -- local Container = self.Container;
-
-        assert(Info.Default, 'AddColorPicker: Missing default value.');
-
+        local ToggleLabel = self.TextLabel
+        assert(Info.Default, 'AddColorPicker: Missing default value.')
+    
         local ColorPicker = {
-            Value = Info.Default;
-            Transparency = Info.Transparency or 0;
-            Type = 'ColorPicker';
+            Value = Info.Default,
+            Type = 'ColorPicker',
             Title = type(Info.Title) == 'string' and Info.Title or 'Color picker',
-            Callback = Info.Callback or function(Color) end;
-        };
-
+            Callback = Info.Callback or function(Color) end,
+        }
+    
         function ColorPicker:SetHSVFromRGB(Color)
-            local H, S, V = Color3.toHSV(Color);
-
-            ColorPicker.Hue = H;
-            ColorPicker.Sat = S;
-            ColorPicker.Vib = V;
-        end;
-
-        ColorPicker:SetHSVFromRGB(ColorPicker.Value);
-
-        local DisplayFrame = Library:Create('Frame', {
-            BackgroundColor3 = ColorPicker.Value;
-            BorderColor3 = Library:GetDarkerColor(ColorPicker.Value);
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(0, 28, 0, 14);
-            ZIndex = 6;
-            Parent = ToggleLabel;
-        });
-
-        -- Transparency image taken from https://github.com/matas3535/SplixPrivateDrawingLibrary/blob/main/Library.lua cus i'm lazy
-        local CheckerFrame = Library:Create('ImageLabel', {
-            BorderSizePixel = 0;
-            Size = UDim2.new(0, 27, 0, 13);
-            ZIndex = 5;
-            Image = 'http://www.roblox.com/asset/?id=12977615774';
-            Visible = not not Info.Transparency;
-            Parent = DisplayFrame;
-        });
-
-        -- 1/16/23
-        -- Rewrote this to be placed inside the Library ScreenGui
-        -- There was some issue which caused RelativeOffset to be way off
-        -- Thus the color picker would never show
-
-        local PickerFrameOuter = Library:Create('Frame', {
-            Name = 'Color';
-            BackgroundColor3 = Color3.new(1, 1, 1);
-            BorderColor3 = Color3.new(0, 0, 0);
-            Position = UDim2.fromOffset(DisplayFrame.AbsolutePosition.X, DisplayFrame.AbsolutePosition.Y + 18),
-            Size = UDim2.fromOffset(230, Info.Transparency and 271 or 253);
-            Visible = false;
-            ZIndex = 15;
-            Parent = ScreenGui,
-        });
-
-        DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
-            PickerFrameOuter.Position = UDim2.fromOffset(DisplayFrame.AbsolutePosition.X, DisplayFrame.AbsolutePosition.Y + 18);
-        end)
-
-        local PickerFrameInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.BackgroundColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 16;
-            Parent = PickerFrameOuter;
-        });
-
-        local Highlight = Library:Create('Frame', {
-            BackgroundColor3 = Library.AccentColor;
-            BorderSizePixel = 0;
-            Size = UDim2.new(1, 0, 0, 2);
-            ZIndex = 17;
-            Parent = PickerFrameInner;
-        });
-
-        local SatVibMapOuter = Library:Create('Frame', {
-            BorderColor3 = Color3.new(0, 0, 0);
-            Position = UDim2.new(0, 4, 0, 25);
-            Size = UDim2.new(0, 200, 0, 200);
-            ZIndex = 17;
-            Parent = PickerFrameInner;
-        });
-
-        local SatVibMapInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.BackgroundColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 18;
-            Parent = SatVibMapOuter;
-        });
-
-        local SatVibMap = Library:Create('ImageLabel', {
-            BorderSizePixel = 0;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 18;
-            Image = 'rbxassetid://4155801252';
-            Parent = SatVibMapInner;
-        });
-
-        local CursorOuter = Library:Create('ImageLabel', {
-            AnchorPoint = Vector2.new(0.5, 0.5);
-            Size = UDim2.new(0, 6, 0, 6);
-            BackgroundTransparency = 1;
-            Image = 'http://www.roblox.com/asset/?id=9619665977';
-            ImageColor3 = Color3.new(0, 0, 0);
-            ZIndex = 19;
-            Parent = SatVibMap;
-        });
-
-        local CursorInner = Library:Create('ImageLabel', {
-            Size = UDim2.new(0, CursorOuter.Size.X.Offset - 2, 0, CursorOuter.Size.Y.Offset - 2);
-            Position = UDim2.new(0, 1, 0, 1);
-            BackgroundTransparency = 1;
-            Image = 'http://www.roblox.com/asset/?id=9619665977';
-            ZIndex = 20;
-            Parent = CursorOuter;
-        })
-
-        local HueSelectorOuter = Library:Create('Frame', {
-            BorderColor3 = Color3.new(0, 0, 0);
-            Position = UDim2.new(0, 208, 0, 25);
-            Size = UDim2.new(0, 15, 0, 200);
-            ZIndex = 17;
-            Parent = PickerFrameInner;
-        });
-
-        local HueSelectorInner = Library:Create('Frame', {
-            BackgroundColor3 = Color3.new(1, 1, 1);
-            BorderSizePixel = 0;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 18;
-            Parent = HueSelectorOuter;
-        });
-
-        local HueCursor = Library:Create('Frame', { 
-            BackgroundColor3 = Color3.new(1, 1, 1);
-            AnchorPoint = Vector2.new(0, 0.5);
-            BorderColor3 = Color3.new(0, 0, 0);
-            Size = UDim2.new(1, 0, 0, 1);
-            ZIndex = 18;
-            Parent = HueSelectorInner;
-        });
-
-        local HueBoxOuter = Library:Create('Frame', {
-            BorderColor3 = Color3.new(0, 0, 0);
-            Position = UDim2.fromOffset(4, 228),
-            Size = UDim2.new(0.5, -6, 0, 20),
-            ZIndex = 18,
-            Parent = PickerFrameInner;
-        });
-
-        local HueBoxInner = Library:Create('Frame', {
-            BackgroundColor3 = Library.MainColor;
-            BorderColor3 = Library.OutlineColor;
-            BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 18,
-            Parent = HueBoxOuter;
-        });
-
-        Library:Create('UIGradient', {
-            Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(212, 212, 212))
-            });
-            Rotation = 90;
-            Parent = HueBoxInner;
-        });
-
-        local HueBox = Library:Create('TextBox', {
-            BackgroundTransparency = 1;
-            Position = UDim2.new(0, 5, 0, 0);
-            Size = UDim2.new(1, -5, 1, 0);
-            Font = Library.Font;
-            PlaceholderColor3 = Color3.fromRGB(190, 190, 190);
-            PlaceholderText = 'Hex color',
-            Text = '#FFFFFF',
-            TextColor3 = Library.FontColor;
-            TextSize = 14;
-            TextStrokeTransparency = 0;
-            TextXAlignment = Enum.TextXAlignment.Left;
-            ZIndex = 20,
-            Parent = HueBoxInner;
-        });
-
-        Library:ApplyTextStroke(HueBox);
-
-        local RgbBoxBase = Library:Create(HueBoxOuter:Clone(), {
-            Position = UDim2.new(0.5, 2, 0, 228),
-            Size = UDim2.new(0.5, -6, 0, 20),
-            Parent = PickerFrameInner
-        });
-
-        local RgbBox = Library:Create(RgbBoxBase.Frame:FindFirstChild('TextBox'), {
-            Text = '255, 255, 255',
-            PlaceholderText = 'RGB color',
-            TextColor3 = Library.FontColor
-        });
-
-        local TransparencyBoxOuter, TransparencyBoxInner, TransparencyCursor;
-        
-        if Info.Transparency then 
-            TransparencyBoxOuter = Library:Create('Frame', {
-                BorderColor3 = Color3.new(0, 0, 0);
-                Position = UDim2.fromOffset(4, 251);
-                Size = UDim2.new(1, -8, 0, 15);
-                ZIndex = 19;
-                Parent = PickerFrameInner;
-            });
-
-            TransparencyBoxInner = Library:Create('Frame', {
-                BackgroundColor3 = ColorPicker.Value;
-                BorderColor3 = Library.OutlineColor;
-                BorderMode = Enum.BorderMode.Inset;
-                Size = UDim2.new(1, 0, 1, 0);
-                ZIndex = 19;
-                Parent = TransparencyBoxOuter;
-            });
-
-            Library:AddToRegistry(TransparencyBoxInner, { BorderColor3 = 'OutlineColor' });
-
-            Library:Create('ImageLabel', {
-                BackgroundTransparency = 1;
-                Size = UDim2.new(1, 0, 1, 0);
-                Image = 'http://www.roblox.com/asset/?id=12978095818';
-                ZIndex = 20;
-                Parent = TransparencyBoxInner;
-            });
-
-            TransparencyCursor = Library:Create('Frame', { 
-                BackgroundColor3 = Color3.new(1, 1, 1);
-                AnchorPoint = Vector2.new(0.5, 0);
-                BorderColor3 = Color3.new(0, 0, 0);
-                Size = UDim2.new(0, 1, 1, 0);
-                ZIndex = 21;
-                Parent = TransparencyBoxInner;
-            });
-        end;
-
-        local DisplayLabel = Library:CreateLabel({
-            Size = UDim2.new(1, 0, 0, 14);
-            Position = UDim2.fromOffset(5, 5);
-            TextXAlignment = Enum.TextXAlignment.Left;
-            TextSize = 14;
-            Text = ColorPicker.Title,--Info.Default;
-            TextWrapped = false;
-            ZIndex = 16;
-            Parent = PickerFrameInner;
-        });
-
-
-        local ContextMenu = {}
-        do
-            ContextMenu.Options = {}
-            ContextMenu.Container = Library:Create('Frame', {
-                BorderColor3 = Color3.new(),
-                ZIndex = 14,
-
-                Visible = false,
-                Parent = ScreenGui
-            })
-
-            ContextMenu.Inner = Library:Create('Frame', {
-                BackgroundColor3 = Library.BackgroundColor;
-                BorderColor3 = Library.OutlineColor;
-                BorderMode = Enum.BorderMode.Inset;
-                Size = UDim2.fromScale(1, 1);
-                ZIndex = 15;
-                Parent = ContextMenu.Container;
-            });
-
-            Library:Create('UIListLayout', {
-                Name = 'Layout',
-                FillDirection = Enum.FillDirection.Vertical;
-                SortOrder = Enum.SortOrder.LayoutOrder;
-                Parent = ContextMenu.Inner;
-            });
-
-            Library:Create('UIPadding', {
-                Name = 'Padding',
-                PaddingLeft = UDim.new(0, 4),
-                Parent = ContextMenu.Inner,
-            });
-
-            local function updateMenuPosition()
-                ContextMenu.Container.Position = UDim2.fromOffset(
-                    (DisplayFrame.AbsolutePosition.X + DisplayFrame.AbsoluteSize.X) + 4,
-                    DisplayFrame.AbsolutePosition.Y + 1
-                )
-            end
-
-            local function updateMenuSize()
-                local menuWidth = 60
-                for i, label in next, ContextMenu.Inner:GetChildren() do
-                    if label:IsA('TextLabel') then
-                        menuWidth = math.max(menuWidth, label.TextBounds.X)
-                    end
-                end
-
-                ContextMenu.Container.Size = UDim2.fromOffset(
-                    menuWidth + 8,
-                    ContextMenu.Inner.Layout.AbsoluteContentSize.Y + 4
-                )
-            end
-
-            DisplayFrame:GetPropertyChangedSignal('AbsolutePosition'):Connect(updateMenuPosition)
-            ContextMenu.Inner.Layout:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(updateMenuSize)
-
-            task.spawn(updateMenuPosition)
-            task.spawn(updateMenuSize)
-
-            Library:AddToRegistry(ContextMenu.Inner, {
-                BackgroundColor3 = 'BackgroundColor';
-                BorderColor3 = 'OutlineColor';
-            });
-
-            function ContextMenu:Show()
-                self.Container.Visible = true
-            end
-
-            function ContextMenu:Hide()
-                self.Container.Visible = false
-            end
-
-            function ContextMenu:AddOption(Str, Callback)
-                if type(Callback) ~= 'function' then
-                    Callback = function() end
-                end
-
-                local Button = Library:CreateLabel({
-                    Active = false;
-                    Size = UDim2.new(1, 0, 0, 15);
-                    TextSize = 13;
-                    Text = Str;
-                    ZIndex = 16;
-                    Parent = self.Inner;
-                    TextXAlignment = Enum.TextXAlignment.Left,
-                });
-
-                Library:OnHighlight(Button, Button, 
-                    { TextColor3 = 'AccentColor' },
-                    { TextColor3 = 'FontColor' }
-                );
-
-                Button.InputBegan:Connect(function(Input)
-                    if Input.UserInputType ~= Enum.UserInputType.MouseButton1 then
-                        return
-                    end
-
-                    Callback()
-                end)
-            end
-
-            ContextMenu:AddOption('Copy color', function()
-                Library.ColorClipboard = ColorPicker.Value
-                Library:Notify('Copied color!', 2)
-            end)
-
-            ContextMenu:AddOption('Paste color', function()
-                if not Library.ColorClipboard then
-                    return Library:Notify('You have not copied a color!', 2)
-                end
-                ColorPicker:SetValueRGB(Library.ColorClipboard)
-            end)
-
-
-            ContextMenu:AddOption('Copy HEX', function()
-                pcall(setclipboard, ColorPicker.Value:ToHex())
-                Library:Notify('Copied hex code to clipboard!', 2)
-            end)
-
-            ContextMenu:AddOption('Copy RGB', function()
-                pcall(setclipboard, table.concat({ math.floor(ColorPicker.Value.R * 255), math.floor(ColorPicker.Value.G * 255), math.floor(ColorPicker.Value.B * 255) }, ', '))
-                Library:Notify('Copied RGB values to clipboard!', 2)
-            end)
-
+            local H, S, V = Color3.toHSV(Color)
+            ColorPicker.Hue = H
+            ColorPicker.Sat = S
+            ColorPicker.Vib = V
         end
-
-        Library:AddToRegistry(PickerFrameInner, { BackgroundColor3 = 'BackgroundColor'; BorderColor3 = 'OutlineColor'; });
-        Library:AddToRegistry(Highlight, { BackgroundColor3 = 'AccentColor'; });
-        Library:AddToRegistry(SatVibMapInner, { BackgroundColor3 = 'BackgroundColor'; BorderColor3 = 'OutlineColor'; });
-
-        Library:AddToRegistry(HueBoxInner, { BackgroundColor3 = 'MainColor'; BorderColor3 = 'OutlineColor'; });
-        Library:AddToRegistry(RgbBoxBase.Frame, { BackgroundColor3 = 'MainColor'; BorderColor3 = 'OutlineColor'; });
-        Library:AddToRegistry(RgbBox, { TextColor3 = 'FontColor', });
-        Library:AddToRegistry(HueBox, { TextColor3 = 'FontColor', });
-
-        local SequenceTable = {};
-
-        for Hue = 0, 1, 0.1 do
-            table.insert(SequenceTable, ColorSequenceKeypoint.new(Hue, Color3.fromHSV(Hue, 1, 1)));
-        end;
-
-        local HueSelectorGradient = Library:Create('UIGradient', {
-            Color = ColorSequence.new(SequenceTable);
-            Rotation = 90;
-            Parent = HueSelectorInner;
-        });
-
-        HueBox.FocusLost:Connect(function(enter)
-            if enter then
-                local success, result = pcall(Color3.fromHex, HueBox.Text)
-                if success and typeof(result) == 'Color3' then
-                    ColorPicker.Hue, ColorPicker.Sat, ColorPicker.Vib = Color3.toHSV(result)
-                end
-            end
-
-            ColorPicker:Display()
+    
+        ColorPicker:SetHSVFromRGB(ColorPicker.Value)
+    
+        local DisplayFrame = Library:Create('Frame', {
+            BackgroundTransparency = 1,
+            BorderColor3 = Library:GetDarkerColor(ColorPicker.Value),
+            BorderMode = Enum.BorderMode.Inset,
+            Size = UDim2.new(0, 28, 0, 14),
+            ZIndex = 6,
+            Parent = ToggleLabel,
+        })
+    
+        local ColorOverlay = Library:Create('Frame', {
+            BackgroundColor3 = ColorPicker.Value,
+            BorderSizePixel = 0,
+            Size = UDim2.new(1, 0, 1, 0),
+            ZIndex = 6,
+            Parent = DisplayFrame,
+        })
+    
+        Library:OnHighlight(DisplayFrame, DisplayFrame,
+            { BorderColor3 = 'AccentColor' },
+            { BorderColor3 = 'AccentColorDark' }
+        )
+    
+        -- Create Ratware Color Picker
+        local picker = ColorPicker.new()
+        picker.displayFrame = DisplayFrame
+        picker:SetColor(ColorPicker.Value)
+    
+        local oldColor = ColorPicker.Value
+    
+        picker.Changed:Connect(function(newColor)
+            ColorPicker.Value = newColor
+            ColorPicker:SetHSVFromRGB(newColor)
+            ColorOverlay.BackgroundColor3 = newColor
+            Library:SafeCallback(ColorPicker.Callback, newColor)
         end)
-
-        RgbBox.FocusLost:Connect(function(enter)
-            if enter then
-                local r, g, b = RgbBox.Text:match('(%d+),%s*(%d+),%s*(%d+)')
-                if r and g and b then
-                    ColorPicker.Hue, ColorPicker.Sat, ColorPicker.Vib = Color3.toHSV(Color3.fromRGB(r, g, b))
-                end
+    
+        picker.Closed:Connect(function(canceled)
+            PickerOpen = false
+            if canceled then
+                picker:SetColor(oldColor)
             end
-
-            ColorPicker:Display()
         end)
-
-        function ColorPicker:Display()
-            ColorPicker.Value = Color3.fromHSV(ColorPicker.Hue, ColorPicker.Sat, ColorPicker.Vib);
-            SatVibMap.BackgroundColor3 = Color3.fromHSV(ColorPicker.Hue, 1, 1);
-
-            Library:Create(DisplayFrame, {
-                BackgroundColor3 = ColorPicker.Value;
-                BackgroundTransparency = ColorPicker.Transparency;
-                BorderColor3 = Library:GetDarkerColor(ColorPicker.Value);
-            });
-
-            if TransparencyBoxInner then
-                TransparencyBoxInner.BackgroundColor3 = ColorPicker.Value;
-                TransparencyCursor.Position = UDim2.new(1 - ColorPicker.Transparency, 0, 0, 0);
-            end;
-
-            CursorOuter.Position = UDim2.new(ColorPicker.Sat, 0, 1 - ColorPicker.Vib, 0);
-            HueCursor.Position = UDim2.new(0, 0, ColorPicker.Hue, 0);
-
-            HueBox.Text = '#' .. ColorPicker.Value:ToHex()
-            RgbBox.Text = table.concat({ math.floor(ColorPicker.Value.R * 255), math.floor(ColorPicker.Value.G * 255), math.floor(ColorPicker.Value.B * 255) }, ', ')
-
-            Library:SafeCallback(ColorPicker.Callback, ColorPicker.Value);
-            Library:SafeCallback(ColorPicker.Changed, ColorPicker.Value);
-        end;
-
-        function ColorPicker:OnChanged(Func)
-            ColorPicker.Changed = Func;
-            Func(ColorPicker.Value)
-        end;
-
-        function ColorPicker:Show()
-            for Frame, Val in next, Library.OpenedFrames do
-                if Frame.Name == 'Color' then
-                    Frame.Visible = false;
-                    Library.OpenedFrames[Frame] = nil;
-                end;
-            end;
-
-            PickerFrameOuter.Visible = true;
-            Library.OpenedFrames[PickerFrameOuter] = true;
-        end;
-
-        function ColorPicker:Hide()
-            PickerFrameOuter.Visible = false;
-            Library.OpenedFrames[PickerFrameOuter] = nil;
-        end;
-
-        function ColorPicker:SetValue(HSV, Transparency)
-            local Color = Color3.fromHSV(HSV[1], HSV[2], HSV[3]);
-
-            ColorPicker.Transparency = Transparency or 0;
-            ColorPicker:SetHSVFromRGB(Color);
-            ColorPicker:Display();
-        end;
-
-        function ColorPicker:SetValueRGB(Color, Transparency)
-            ColorPicker.Transparency = Transparency or 0;
-            ColorPicker:SetHSVFromRGB(Color);
-            ColorPicker:Display();
-        end;
-
-        SatVibMap.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                    local MinX = SatVibMap.AbsolutePosition.X;
-                    local MaxX = MinX + SatVibMap.AbsoluteSize.X;
-                    local MouseX = math.clamp(Mouse.X, MinX, MaxX);
-
-                    local MinY = SatVibMap.AbsolutePosition.Y;
-                    local MaxY = MinY + SatVibMap.AbsoluteSize.Y;
-                    local MouseY = math.clamp(Mouse.Y, MinY, MaxY);
-
-                    ColorPicker.Sat = (MouseX - MinX) / (MaxX - MinX);
-                    ColorPicker.Vib = 1 - ((MouseY - MinY) / (MaxY - MinY));
-                    ColorPicker:Display();
-
-                    RenderStepped:Wait();
-                end;
-
-                Library:AttemptSave();
-            end;
-        end);
-
-        HueSelectorInner.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                    local MinY = HueSelectorInner.AbsolutePosition.Y;
-                    local MaxY = MinY + HueSelectorInner.AbsoluteSize.Y;
-                    local MouseY = math.clamp(Mouse.Y, MinY, MaxY);
-
-                    ColorPicker.Hue = ((MouseY - MinY) / (MaxY - MinY));
-                    ColorPicker:Display();
-
-                    RenderStepped:Wait();
-                end;
-
-                Library:AttemptSave();
-            end;
-        end);
-
-        DisplayFrame.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
-                if PickerFrameOuter.Visible then
-                    ColorPicker:Hide()
-                else
-                    ContextMenu:Hide()
-                    ColorPicker:Show()
-                end;
-            elseif Input.UserInputType == Enum.UserInputType.MouseButton2 and not Library:MouseIsOverOpenedFrame() then
-                ContextMenu:Show()
-                ColorPicker:Hide()
-            end
-        end);
-
-        if TransparencyBoxInner then
-            TransparencyBoxInner.InputBegan:Connect(function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    while InputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                        local MinX = TransparencyBoxInner.AbsolutePosition.X;
-                        local MaxX = MinX + TransparencyBoxInner.AbsoluteSize.X;
-                        local MouseX = math.clamp(Mouse.X, MinX, MaxX);
-
-                        ColorPicker.Transparency = 1 - ((MouseX - MinX) / (MaxX - MinX));
-
-                        ColorPicker:Display();
-
-                        RenderStepped:Wait();
-                    end;
-
-                    Library:AttemptSave();
-                end;
-            end);
-        end;
-
-        Library:GiveSignal(InputService.InputBegan:Connect(function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                local AbsPos, AbsSize = PickerFrameOuter.AbsolutePosition, PickerFrameOuter.AbsoluteSize;
-
-                if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X
-                    or Mouse.Y < (AbsPos.Y - 20 - 1) or Mouse.Y > AbsPos.Y + AbsSize.Y then
-
-                    ColorPicker:Hide();
-                end;
-
-                if not Library:IsMouseOverFrame(ContextMenu.Container) then
-                    ContextMenu:Hide()
-                end
-            end;
-
-            if Input.UserInputType == Enum.UserInputType.MouseButton2 and ContextMenu.Container.Visible then
-                if not Library:IsMouseOverFrame(ContextMenu.Container) and not Library:IsMouseOverFrame(DisplayFrame) then
-                    ContextMenu:Hide()
+    
+        DisplayFrame.MouseButton1Click:Connect(function()
+            oldColor = ColorPicker.Value
+            picker:Start()
+            PickerOpen = true
+        end)
+    
+        local PickerOpen = false
+        local ClosePickerConnection = InputService.InputBegan:Connect(function(Input)
+            if Input.UserInputType == Enum.UserInputType.MouseButton1 and PickerOpen then
+                local Mouse = Mouse
+                local AbsPos = picker.frame.AbsolutePosition
+                local AbsSize = picker.frame.AbsoluteSize
+                if Mouse.X < AbsPos.X or Mouse.X > AbsPos.X + AbsSize.X or
+                   Mouse.Y < AbsPos.Y or Mouse.Y > AbsPos.Y + AbsSize.Y then
+                    picker:Close()
+                    PickerOpen = false
                 end
             end
-        end))
-
-        ColorPicker:Display();
-        ColorPicker.DisplayFrame = DisplayFrame
-
-        Options[Idx] = ColorPicker;
-
-        return self;
-    end;
+        end)
+    
+        table.insert(Library.Signals, ClosePickerConnection)
+    
+        return ColorPicker
+    end
 
     function Funcs:AddKeyPicker(Idx, Info)
         local ParentObj = self;
